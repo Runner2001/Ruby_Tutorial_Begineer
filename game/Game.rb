@@ -46,34 +46,47 @@ class TicTacToe
     end
 
     def win?
-        row = [board[0], board[1], board[2]].compact
-        return row.first if row.length == 3 && row.all?{ |r| r == row.first}
 
-        row = [board[3], board[4], board[5]].compact
-        return row.first if row.length == 3 && row.all?{ |r| r == row.first}
+        # Horizontal
+        board.each_slice(size) do |slice|
+            row = slice.compact
+            return row.first if wining_row?(row)
+        end
 
-        row = [board[6], board[7], board[8]].compact
-        return row.first if row.length == 3 && row.all?{ |r| r == row.first}
+        # Vertical
+        size.times do |i|
+            row = []
+            size.times do |j|
+                index = i + (j * size) 
+                row << board[index]
+            end
+            return row.first if wining_row?(row)
+        end
 
-        row = [board[0], board[3], board[6]].compact
-        return row.first if row.length == 3 && row.all?{ |r| r == row.first}
+        # First Diagonals
+        row = []
+        size.times do |i|
+            index = (size * i) + i 
+            row << board[index]
+        end
+        return row.first if wining_row?(row)
 
-        row = [board[1], board[4], board[7]].compact
-        return row.first if row.length == 3 && row.all?{ |r| r == row.first}
-
-        row = [board[2], board[5], board[8]].compact
-        return row.first if row.length == 3 && row.all?{ |r| r == row.first}
-
-        row = [board[0], board[4], board[8]].compact
-        return row.first if row.length == 3 && row.all?{ |r| r == row.first}
-
-        row = [board[2], board[4], board[6]].compact
-        return row.first if row.length == 3 && row.all?{ |r| r == row.first}
+        # Second Diagonals
+        row = []
+        size.times do |i|
+            index = (size * (i + 1)) - (i + 1)
+            row << board[index]
+        end
+        return row.first if wining_row?(row)
 
     end
 
     def draw?
         return board.none?(nil) && !win?
+    end
+
+    def wining_row?(row)
+        row.length == size && row.all?{ |r| r == row.first}
     end
 
     def render
